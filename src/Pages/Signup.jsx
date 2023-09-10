@@ -5,16 +5,19 @@ import { UserAuth } from '../Context/AuthContext'
 const Signup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error,setError] = useState('')
     const {user, signUp} = UserAuth()
     const navigate = useNavigate()
 
     const handleSubmit = async(e) => {
         e.preventDefault()
+        setError('')
         try {
             await signUp(email, password)
             navigate('/')
         } catch (error) {
             console.log(error);
+            setError(error.message)
         }
     }
 
@@ -27,7 +30,9 @@ const Signup = () => {
             <div className='max-w-[450px] h-[600px] bg-black/75 mx-auto text-white'>
                 <div className='w-full sm:max-w-[320px] mx-auto py-16'>
                     <h1 className='text-3xl font-bold'>Sign Up</h1>
-                    <form onSubmit={handleSubmit} className='w-full flex flex-col py-4'>
+                    {error ? <p className='p-1 mt-5 bg-red-600 text-center text-sm rounded'>{error}</p> : null}
+                    <form onSubmit={handleSubmit} 
+                        className='w-full flex flex-col py-4'>
                         <input onChange={(e) => setEmail(e.target.value)}
                             className='p-3 my-2 bg-zinc-800 rounded text-white'
                             type='email' 
